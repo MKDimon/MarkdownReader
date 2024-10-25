@@ -20,4 +20,5 @@ QtObject {
     readonly property color videoFoneColor: "#24404c"
 
     readonly property string add_new_folder: "qrc:/add_new_folder.svg"
+    readonly property string search_icon: "qrc:/search.svg"
 }

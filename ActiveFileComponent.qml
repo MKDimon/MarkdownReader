@@ -6,54 +6,78 @@ import test.cadabra 1.0
 Item {
     id: activeFileItem
 
-    function setFile(file) {
-        markdownProcessor.filePath = file
-    }
+    property alias filePath: markdownProcessor.filePath
 
     BlockModel {
         id: blockModel
     }
 
     Rectangle {
-        id: fileNameRect
-        anchors.margins: 5
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        width: parent.width
-        height: fileNameText.contentHeight
-        radius: 2
-
-        color: Constants.firstPanel
-
-        TextEdit {
-            id: fileNameText
-            readOnly: true
-            width: parent.width
-            text: markdownProcessor.filePath
-            font: Constants.font
-            wrapMode: Text.WordWrap
-            color: Constants.secondaryText
-        }
-    }
-
-    Rectangle {
         id: blocksListRect
-        anchors.top: fileNameRect.bottom
+        anchors.fill: parent
         anchors.margins: 5
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
         radius: 2
         clip: true
 
         color: Constants.firstPanel
 
+        SearchRow {
+            id: activeFileSearchRow
+            width: parent.width
+            anchors.top: parent.top
+            height: 50
+            anchors.margins: 5
+
+            onSearch: (text) => {
+                          if (blocksListView.currentIndex === -1)  {
+                              blocksListView.currentIndex = 0
+                          }
+
+                          var index = blockModel.searchWithIndex(text, blocksListView.currentIndex)
+                          blocksListView.currentIndex = index
+                      }
+        }
+
         ListView {
             id: blocksListView
             model: blockModel
-            anchors.fill: parent
+            anchors {
+                right: parent.right
+                left: parent.left
+                top: activeFileSearchRow.bottom
+                topMargin: 5
+                bottom: parent.bottom
+            }
+            clip: true
             spacing: 5
+
+            onCurrentIndexChanged: {
+                blocksListView.positionViewAtIndex(currentIndex, blocksListView.Beginning)
+            }
+
+            ScrollBar.vertical: ScrollBar {
+                id: scrollBar
+                width: 10
+                active: hovered || pressed
+                hoverEnabled: true
+                orientation: Qt.Vertical
+                anchors {
+                    right: parent.right
+                    rightMargin: 5
+                    verticalCenter: parent.verticalCenter
+                }
+                background: Rectangle {
+                    implicitWidth: 10
+                    color: "transparent"
+                    radius: 5
+                }
+                contentItem: Rectangle {
+                    width: 10
+                    color: Constants.secondaryElement
+                    radius: 5
+                }
+            }
+
             delegate: Item {
                 width: blockLoader.item.width
                 anchors.left: {

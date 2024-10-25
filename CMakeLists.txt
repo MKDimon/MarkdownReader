@@ -33,8 +33,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET MarkdownReader APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
+   # set_property(TARGET MarkdownReader APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+   #              ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
     qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
@@ -42,6 +42,19 @@ else()
     if(ANDROID)
         add_library(MarkdownReader SHARED
             ${PROJECT_SOURCES}
+            blockmodel.h blockmodel.cpp
+            customblockhandler.h
+            block.h block.cpp
+            warningblock.h warningblock.cpp
+            videoblock.h videoblock.cpp
+            blocks.h
+            warningblockhandler.h warningblockhandler.cpp
+            videoblockhandler.h videoblockhandler.cpp
+            textblockhandler.h textblockhandler.cpp
+            blockhandlers.h
+            markdownprocessor.h markdownprocessor.cpp
+            documenttreemodel.h documenttreemodel.cpp
+            documenttreeitem.h documenttreeitem.cpp
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")

@@ -3,8 +3,10 @@
         <file>main.qml</file>
         <file>ActiveFileComponent.qml</file>
         <file>add_new_folder.svg</file>
+        <file>search.svg</file>
         <file>Constants.qml</file>
         <file>qmldir</file>
         <file>IconButton.qml</file>
+        <file>SearchRow.qml</file>
     </qresource>
 </RCC>

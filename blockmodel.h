@@ -16,65 +16,24 @@ public:
         ContentRole
     };
 
-    BlockModel(QObject* parent = nullptr) : QAbstractListModel(parent) {}
+    BlockModel(QObject* parent = nullptr);
 
-    void initializeBlocks(const QList<QSharedPointer<Block>>& blocks) {
-        beginResetModel();
-        m_blocks.clear();
-        m_allBlocks = blocks;
-        endResetModel();
-    }
+    void initializeBlocks(const QList<QSharedPointer<Block>>& blocks);
 
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override {
-        Q_UNUSED(parent)
-        return m_blocks.count();
-    }
+    Q_INVOKABLE int searchWithIndex(const QString& text, const int index);
 
-    QVariant data(const QModelIndex& index, int role) const override {
-        if (!index.isValid() || index.row() >= m_blocks.count())
-            return QVariant();
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-        const auto& block = m_blocks[index.row()];
-        if (role == TypeRole)
-            return block->type;
-        else if (role == ContentRole)
-            return block->content;
+    QVariant data(const QModelIndex& index, int role) const override;
 
-        return QVariant();
-    }
-
-    void clear() {
-        beginResetModel();
-        m_blocks.clear();
-        m_allBlocks.clear();
-        endResetModel();
-    }
+    void clear();
 
 protected:
-    QHash<int, QByteArray> roleNames() const override {
-        QHash<int, QByteArray> roles;
-        roles[TypeRole] = "type";
-        roles[ContentRole] = "content";
-        return roles;
-    }
+    QHash<int, QByteArray> roleNames() const override;
 
-    bool canFetchMore(const QModelIndex& parent) const override {
-        Q_UNUSED(parent)
-        return m_blocks.size() < m_allBlocks.size();
-    }
+    bool canFetchMore(const QModelIndex& parent) const override;
 
-    void fetchMore(const QModelIndex& parent) override {
-        Q_UNUSED(parent)
-
-        // Загружаем дополнительные блоки (например, по 10 за раз)
-        int loadedBlocks = m_blocks.size();
-        int itemsToFetch = qMin(10, m_allBlocks.size() - loadedBlocks);
-        beginInsertRows(QModelIndex(), loadedBlocks, loadedBlocks + itemsToFetch - 1);
-        for (int i = 0; i < itemsToFetch; ++i) {
-            m_blocks.append(m_allBlocks[loadedBlocks + i]);
-        }
-        endInsertRows();
-    }
+    void fetchMore(const QModelIndex& parent) override;
 
 private:
     QList<QSharedPointer<Block>> m_blocks;        // Список загруженных блоков

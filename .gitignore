@@ -65,6 +65,7 @@ CMakeLists.txt.user*
 *.Release
 
 build/*
+android/*
 
 # Python byte code
 *.pyc

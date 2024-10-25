@@ -6,17 +6,13 @@
 
 class DocumentTreeItem {
 public:
-    // Конструктор по умолчанию
     DocumentTreeItem() = default;
 
-    // Конструктор для инициализации элемента
     DocumentTreeItem(const QString &name, const QString &filePath, int level);
 
-    // Копирующий конструктор и оператор присваивания
     DocumentTreeItem(const DocumentTreeItem&);
     DocumentTreeItem &operator=(const DocumentTreeItem&);
 
-    // Методы доступа
     const QString& name() const;
     const QString& filePath() const;
     bool isLoaded() const;

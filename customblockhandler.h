@@ -15,7 +15,7 @@ public:
     // Проверяет, подходит ли строка для данного типа блока
     virtual bool matches(const QString &line) const = 0;
 
-    // Обрабатывает строку и возвращает блок
+    // Обрабатывает строку(и) и возвращает блок
     virtual QSharedPointer<Block> processBlock(QTextStream &stream, const QString &line) const = 0;
 };
 

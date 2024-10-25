@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(MarkdownReader VERSION 0.1 LANGUAGES CXX)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -12,11 +13,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools Multimedia Concurrent)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools Multimedia Concurrent)
 
-find_library(CMARK cmark ${CMAKE_SOURCE_DIR}/3rdParty/libs)
-find_library(GTEST gtest ${CMAKE_SOURCE_DIR}/3rdParty/libs)
-find_library(GMOCK gmock ${CMAKE_SOURCE_DIR}/3rdParty/libs)
-
 include_directories(${CMAKE_SOURCE_DIR}/3rdParty/include)
+include_directories(${CMAKE_SOURCE_DIR}/3rdParty/libs)
+add_library(cmark STATIC IMPORTED)
+set_target_properties(cmark PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/3rdParty/libs/libcmark.so)
 
 set(TS_FILES MarkdownReader_ru_RU.ts)
 
@@ -25,7 +25,6 @@ set(PROJECT_SOURCES
         qml.qrc
         ${TS_FILES}
 )
-
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(MarkdownReader
@@ -57,7 +56,7 @@ else()
             documenttreeitem.h documenttreeitem.cpp
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(MarkdownReader
           ${PROJECT_SOURCES}
@@ -82,7 +81,7 @@ endif()
 
 target_link_libraries(MarkdownReader
   PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Multimedia Qt${QT_VERSION_MAJOR}::Concurrent)
-target_link_libraries(MarkdownReader PRIVATE ${CMARK} ${GTEST} ${GMOCK})
+target_link_libraries(MarkdownReader PRIVATE cmark)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
